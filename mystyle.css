@@ -1,0 +1,122 @@
+body, p, h1, button, li,h2,th,table,tr,footer, img.img2, div.container {
+  margin: 0;
+  padding: 0;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; 
+}
+
+body {
+  background-color: #ffffff; 
+  color: #333; 
+  line-height: 1.6; 
+  padding: 20px; 
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1); 
+}
+
+table, th, tr, td {
+  border: 1px solid;
+}
+
+h1 {
+  font-size: 28px; 
+  color: #000; 
+  margin-bottom: 20px; 
+  letter-spacing: 1.2px; 
+}
+
+p, code,th,table,div.container {
+  font-size: 16px; 
+  max-width: 600px; 
+  margin: 0 auto; 
+  padding: 10px; 
+  background-color: #fff; 
+}
+
+
+li {
+  font-size: 14px; 
+  max-width: 600px; 
+  margin: 0 auto; 
+  padding: 10px; 
+  background-color: #eee;
+  list-style-position: inside;
+  font-style: italic; 
+}
+code {
+  font-family: Consolas, "Andale Mono WT", "Andale Mono", "Lucida Console", "Lucida Sans Typewriter", "DejaVu Sans Mono", "Bitstream Vera Sans Mono", "Liberation Mono", "Nimbus Mono L", Monaco, "Courier New", Courier, monospace;
+}
+
+footer {
+  font-size: 8px;
+}
+/* https://stackoverflow.com/questions/3029422/how-to-auto-resize-an-image-while-maintaining-aspect-ratio*/
+div.img1 {
+   width:100px; 
+   height:100px; 
+   background-image:url('http://www.clker.com/cliparts/b/8/8/2/1369900380534177305csv_file-hi.png');
+   margin:0; 
+   padding:0; 
+}
+#graph-container {
+  min-height: 300px; 
+  min-width: 500px; 
+  transition: height 0.3s ease-out; 
+}
+
+
+img.img2 {
+  margin: 0px;
+  padding: 0px;
+  max-width: 600px; 
+
+}
+p.p1 {
+  text-align: center;
+}
+/*header stuff below from w3schools*/
+ /* Style the header */
+ .header {
+  padding: 10px 12px;
+  background: #000000;
+  color: #f1f1f1;
+}
+
+/* Page content */
+.content {
+  padding: 16px;
+}
+
+/* The sticky class is added to the header with JS when it reaches its scroll position */
+.sticky {
+  position: fixed;
+  top: 0;
+  width: 100%
+}
+
+/* Add some top padding to the page content to prevent sudden quick movement (as the header gets a new position at the top of the page (position:fixed and top:0) */
+.sticky + .content {
+  padding-top: 0px;
+} 
+
+/*This part deals with references*/
+a:link {
+  color: lightblue;
+  text-decoration: none;
+}
+
+/* visited link */
+a:visited {
+  color: lightblue;
+  text-decoration: none;
+}
+
+/* mouse over link */
+a:hover {
+  color: hotpink;
+  text-decoration: none;
+}
+
+/* selected link */
+a:active {
+  color: rgb(64, 185, 225);
+  text-decoration: none;
+}

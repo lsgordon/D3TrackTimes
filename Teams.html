@@ -1,0 +1,186 @@
+<!--Teams.html-->
+<!DOCTYPE HTML>
+<head>
+    <meta charset="utf-8">    
+    <link rel="icon" type="image/x-icon" href="./favicon.ico">
+    <link rel="stylesheet" href="mystyle.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<title>D3 Track Times </title>
+<meta name="title" content="D3 Track Times " />
+<meta name="description" content=" This website shows you how fast you are compared to the below track times. " />
+<title>
+    D3 Track Times
+</title>
+</head>
+<body>
+    <div class="header" id="myHeader">
+        <h2> <a href="http://loin.cs.brynmawr.edu:23456">Home</a> ⏺︎  <a href="http://loin.cs.brynmawr.edu:23456/Athletes.html">Athletes</a> ⏺︎ <a href="http://loin.cs.brynmawr.edu:23456/Teams.html">Teams</a> </h2>
+    </div> 
+    <div class="content">
+        <h1>
+            Team Search:
+        </h1>
+        <p>
+            This page lets you search teams based on a partial name or the state of the team. You can also click on a team to get their roster.
+        </p>
+        <div>
+            <label for="morp">Mongo/Postgres</label>
+            <select name="morp" id="morp" onchange="myFunction()">
+                <option value="0">Mongo</option>
+                <option value="1">Postgres</option>
+            </select>
+            <!--I ripped this from the web, I forget from where-->
+            <select name="state"id="state" onchange="myFunction">
+                <option value="AL">AL</option>
+                <option value="AK">AK</option>
+                <option value="AR">AR</option>
+                <option value="AZ">AZ</option>
+                <option value="CA">CA</option>
+                <option value="CO">CO</option>
+                <option value="CT">CT</option>
+                <option value="DC">DC</option>
+                <option value="DE">DE</option>
+                <option value="FL">FL</option>
+                <option value="GA">GA</option>
+                <option value="HI">HI</option>
+                <option value="IA">IA</option>
+                <option value="ID">ID</option>
+                <option value="IL">IL</option>
+                <option value="IN">IN</option>
+                <option value="KS">KS</option>
+                <option value="KY">KY</option>
+                <option value="LA">LA</option>
+                <option value="MA">MA</option>
+                <option value="MD">MD</option>
+                <option value="ME">ME</option>
+                <option value="MI">MI</option>
+                <option value="MN">MN</option>
+                <option value="MO">MO</option>
+                <option value="MS">MS</option>
+                <option value="MT">MT</option>
+                <option value="NC">NC</option>
+                <option value="NE">NE</option>
+                <option value="NH">NH</option>
+                <option value="NJ">NJ</option>
+                <option value="NM">NM</option>
+                <option value="NV">NV</option>
+                <option value="NY">NY</option>
+                <option value="ND">ND</option>
+                <option value="OH">OH</option>
+                <option value="OK">OK</option>
+                <option value="OR">OR</option>
+                <option value="PA">PA</option>
+                <option value="RI">RI</option>
+                <option value="SC">SC</option>
+                <option value="SD">SD</option>
+                <option value="TN">TN</option>
+                <option value="TX">TX</option>
+                <option value="UT">UT</option>
+                <option value="VT">VT</option>
+                <option value="VA">VA</option>
+                <option value="WA">WA</option>
+                <option value="WI">WI</option>
+                <option value="WV">WV</option>
+                <option value="WY">WY</option>
+            </select>
+            &nbsp;&nbsp;&nbsp;&nbsp; OR &nbsp;&nbsp;&nbsp;&nbsp;
+            <input type="text" id="name" name="name">
+            <input type="button" value="submit" onclick="myFunction()"> 
+
+        </div>
+    <h2>
+        Result
+    </h2>
+    <p id="writeHere" style="color:darkblue;font-size: small;">
+
+    </p>
+    <h2 id="fill1">
+
+    </h2>
+    <p id="fill2">
+
+    </p>
+    </div>
+    <script>
+        function myFunction() {
+            const morp = document.getElementById('morp').value;
+            const state = document.getElementById('state').value;
+            const uploadStr = document.getElementById('name').value;
+            if(';' in new Set(Array.from(uploadStr))) {
+                return;
+            }
+            linksReturn = document.getElementById('writeHere');
+            fetch('http://loin.cs.brynmawr.edu:23456/teams',{
+                method:'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body:JSON.stringify({
+                    name:uploadStr,
+                    morp:morp,
+                    state:state
+                })
+            }).then(response => response.text()).then(data => {
+                const parsed = JSON.parse(data);
+                parsed.sort();
+                let toWrite = '';
+                toWrite += `<table>`;
+                    toWrite += `<tr>`;
+                    toWrite += `<td>`;
+                        toWrite += `<p><input type="button" value="sort" onclick=""></p>`;
+                    toWrite += `</tr>`;
+                    toWrite += `</td>`;
+                for(i in parsed) {
+                    toWrite += `<tr>`;
+                    toWrite += `<td>`;
+                    toWrite += `<a href='#' onclick='subQuery(` + i + `)' id='`+ i + `'>` + parsed[i] + `</a>`;
+                    toWrite += `</tr>`;
+                    toWrite += `</td>`;
+
+                }
+                toWrite += `</table>`;
+                linksReturn.innerHTML = toWrite;
+            });
+        }
+    </script>
+    <script>
+        function subQuery(x) {
+            x = x;
+            //console.log(x);
+            const team_name = document.getElementById(x).innerText;
+            //console.log(team_name);
+            const morp = document.getElementById('morp').value;
+            fetch('http://loin.cs.brynmawr.edu:23456/team_name',{
+                method:'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body:JSON.stringify({
+                    morp:morp,
+                    name:team_name
+                })
+            }).then(response => response.text()).then(data => {
+                document.getElementById('fill1').innerText = team_name + ' Roster';
+                let parsed = JSON.parse(data);
+                parsed = Array.from(new Set(parsed));
+                parsed.sort();
+                console.log(parsed);
+                let toWrite = '<table>';
+                    toWrite += `<tr>`;
+                    toWrite += `<td>`;
+                        toWrite += `<p><input type="button" value="sort" onclick=""></p>`;
+                    toWrite += `</tr>`;
+                    toWrite += `</td>`;
+                for(let i = 0; i<parsed.length; i++) {
+                    toWrite += `<tr>`;
+                    toWrite += `<td>`;
+                    toWrite += parsed[i];
+                    toWrite += `</td>`;
+                    toWrite += `</tr>`;
+                }
+                toWrite += '</table>';
+                document.getElementById('fill2').innerHTML = toWrite;
+            })
+        }
+    </script>
+</body>

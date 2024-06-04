@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<head>
+    <title>Presentation</title>
+    <meta charset="utf-8">
+    <meta og:title="Presentations">
+    <link rel="icon" type="image/x-icon" href="./favicon.ico">
+    <link rel="stylesheet" href="mystyle.css">
+</head>
+<body>
+    <div class="header" id="myHeader">
+        <h2> <a href="http://loin.cs.brynmawr.edu:23456">Home</a> ⏺︎  <a href="http://loin.cs.brynmawr.edu:23456/Athletes.html">Athletes</a> ⏺︎ <a href="http://loin.cs.brynmawr.edu/~lsgordon/HW5/Placeholder.html">Teams</a> </h2>
+    </div> 
+    <h1>
+        Presentation
+    </h1>
+    <p>
+        I have built a database of D3 track times that contains a large number (~300000) of entries.
+    </p>
+    <h2>
+        Schema diagram for Mongo
+    </h2>
+    <p><img src="mongo schema.png" alt="" style="height: 100%;width: 100%;"></p>
+    <h2>
+        Schema diagram for Postgres
+    </h2>
+    <p>
+      <img src="posg schema.png" alt="" style="height: 50%; width: 50%;">
+    </p>
+    <h2>
+      Why did I choose this dataset?
+    </h2>
+    <p>
+      I chose this data set for a few reasons:
+      <li>
+        All of the data was publically accesible on one <a href="https://www.athletic.net">athletic.net</a>
+      </li>
+      <li>
+        I run track, so I have a good sense of if the results I was getting were right
+      </li>
+      <li>
+        Results are numeric
+      </li>
+    </p>
+    <h1>
+      Website
+    </h1>
+    <h2>
+      Switching DBs
+    </h2>
+    <p>
+      You choose between Postgres and Mongo using the little dropdown button like this one:
+      <select name="M/P" id="morp" onchange="myFunction2()" onload="myFunction2" selected="Mongo">
+        <option value="Mongo">Mongo</option>
+        <option value="Postgres">Postgres</option>
+      </select>
+      The dataset being used currently is <span id="changeMe" style="font-weight: bolder;">Mongo</span>
+    </p>
+    <h2>
+      Query handling
+    </h2>
+    <p>
+      This website runs off a node.js instance, and each time a 'submit' button is pressed it queries Node which then queries based on the fields of the query
+    </p>
+    <h2>
+      Interesting JS
+    </h2>
+    <p>
+      <img src="graph js.png" alt="" style="height: 150%; width: 150%;">
+    </p>
+    <script>
+        //from https://www.w3schools.com/howto/howto_js_sticky_header.asp
+        // When the user scrolls the page, execute myFunction
+        window.onscroll = function() {myFunction()};
+
+        // Get the header
+        var header = document.getElementById("myHeader");
+
+        // Get the offset position of the navbar
+        var sticky = header.offsetTop;
+
+        // Add the sticky class to the header when you reach its scroll position. Remove "sticky" when you leave the scroll position
+        function myFunction() {
+          if (window.pageYOffset > sticky) {
+            header.classList.add("sticky");
+          } else {
+            header.classList.remove("sticky");
+          }
+        } 
+    </script>
+    <script>
+      function myFunction2() {
+        const toChange = document.getElementById('changeMe');
+        const option = document.getElementById('morp').value;
+        toChange.innerHTML = option;
+      }
+    </script>
+</body>

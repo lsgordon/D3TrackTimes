@@ -1,0 +1,212 @@
+<!DOCTYPE HTML>
+<head>
+    <meta charset="utf-8">    
+    <link rel="icon" type="image/x-icon" href="./favicon.ico">
+    <link rel="stylesheet" href="mystyle.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<title>D3 Track Times </title>
+<meta name="title" content="D3 Track Times " />
+<meta name="description" content=" This website shows you how fast you are compared to the below track times. " />
+<title>
+    D3 Track Times
+</title>
+</head>
+<body>
+<div class="header" id="myHeader">
+    <h2> <a href="http://loin.cs.brynmawr.edu:23456">Home</a> ⏺︎  <a href="http://loin.cs.brynmawr.edu:23456/Athletes.html">Athletes</a> ⏺︎ <a href="http://loin.cs.brynmawr.edu:23456/Teams.html">Teams</a> </h2>
+</div> 
+<div class="content">
+    <h1>
+        How fast are you?
+    </h1>
+    <p>
+        This website shows you how fast you are compared to the below track times. 
+    </p>
+    <div id="graph-container">
+        <canvas id="barChart"></canvas>
+    </div>
+    <p>
+        <form action="">
+            <label for="mf">M/F:</label>
+            <select name="mf" id="mf" onchange="formHandler()">
+                <option value="F">Female</option>
+                <option value="M">Male</option>
+            </select>
+            <label for="distance">distance:</label>
+            <select name="distance" id="distance" onchange="formHandler()">
+                <option value="60meter">60m</option>
+                <option value="200meter">200m</option>
+                <option value="400meter">400m</option>
+                <option value="800meter">800m</option>
+                <option value="3000meter">3000m</option>
+            </select>
+        </form>
+    </p>
+    <script>
+        var JSONdata = "{\n\"_60meterM\":{\n\t\"data\":[0, 0, 8, 424, 2249, 2647, 1762, 792, 357, 126, 59, 29, 4, 7, 2, 2],\n\t\"labels\":[\"6s\",\"6.25s\",\"6.5s\",\"6.75s\",\"7s\",\"7.25s\",\"7.5s\",\"7.75s\",\"8s\",\"8.25s\",\"8.5s\",\"8.75s\",\"9s\",\"9.25s\",\"9.5s\",\"9.75s\"],\n\t\"name\":\"Men's 60 Meter Dash\"\n},\n\"_200meterM\":{\n\t\"data\":[0, 1, 55, 241, 600, 935, 1207, 1202, 947, 649, 479, 325, 225, 142, 64, 42],\n\t\"labels\":[\"20.5s\",\"21s\",\"21.5s\",\"22s\",\"22.5s\",\"23s\",\"23.5s\",\"24s\",\"24.5s\",\"25s\",\"25.5s\",\"26s\",\"26.5\",\"27s\",\"27.5s\",\"28s\",\"28.5s\"],\n\t\"name\":\"Men's 200 Meter Dash\"\n},\n\"_400meterM\":{\n\t\"data\":[0, 0, 15, 41, 145, 277, 455, 565, 631, 539, 457, 331, 240, 168, 116, 90, 62, 148],\n\t\"labels\":[\"45s\",\"46s\",\"47s\",\"48s\",\"49s\",\"50s\",\"51s\",\"52s\",\"53s\",\"54s\",\"55s\",\"56s\",\"57s\",\"58s\",\"59s\",\"1:00\",\"1:01\",\"1:02+\"],\n    \"name\":\"Men's 400 Meter Dash\"\n},\n\"_800meterM\":{\n\t\"data\":[0, 4, 48, 215, 509, 666, 668, 478, 377, 323, 257, 168, 135, 99, 64, 0, 0],\n\t\"labels\":[\"1:45\",\"1:48\",\"1:51\",\"1:54\",\"1:57\",\"2:00\",\"2:03\",\"2:06\",\"2:09\",\"2:12\",\"2:15\",\"2:18\",\"2:21\",\"2:24\",\"2:27\",\"2:30+\"],\n    \"name\":\"Men's 800 Meter Run\"\n},\n\"_3000meterM\":{\n\t\"data\":[13, 48, 116, 294, 495, 481, 530, 425, 359, 324, 190, 155, 101, 74, 148],\n\t\"labels\":[\"8:00\",\"8:12\",\"8:24\",\"8:36\",\"8:48\",\"9:00\",\"9:12\",\"9:24\",\"9:36\",\"9:48\",\"10:00\",\"10:12\",\"10:24\",\"10:36\",\"10:48+\"],\n    \"name\":\"Men's 3000 Meter Run\"\n\n},\n\"_60meterF\":{\n\t\"data\":[1, 74, 590, 1170, 1379, 1119, 703, 429, 253, 128, 81, 149],\n\t\"labels\":[\"7.25s\",\"7.5s\",\"7.75s\",\"8s\",\"8.25s\",\"8.5s\",\"8.75s\",\"9s\",\"9.25s\",\"9.5s\",\"9.75s\",\"10+\"],\n    \"name\":\"Men's 800 Meter Run\"\n},\n\"_200meterF\":{\n\t\"data\":[18, 183, 607, 1226, 1265, 1021, 626, 426, 201, 106, 56,74],\n\t\"labels\":[\"23\",\"24\",\"25\",\"26\",\"27\",\"28\",\"29\",\"30\",\"31\",\"32\",\"33\",\"34\",\"35\",\"36+\"]\n},\n\"_400meterF\":{\n\t\"data\":[5, 11, 40, 82, 126, 211, 269, 307, 339, 291, 267, 250, 174, 163, 153, 126, 81, 67, 51, 46,168],\n\t\"labels\":[\"55s\",\"56s\",\"57s\",\"58s\",\"59s\",\"1:00\",\"1:01\",\"1:02\",\"1:03\",\"1:04\",\"1:05\",\"1:06\",\"1:07\",\"1:08\",\"1:09\",\"1:10\",\"1:11\",\"1:12\",\"1:13\",\"1:14\",\"1:15+\"]\n},\n\"_800meterF\":{\n\t\"data\":[3, 5, 68, 161, 287, 396, 440, 460, 398, 348, 282, 219, 159, 111, 89, 66, 49,156],\n\t\"labels\":[\"2:05\",\"2:09\",\"2:13\",\"2:17\",\"2:21\",\"2:25\",\"2:29\",\"2:33\",\"2:37\",\"2:41\",\"2:45\",\"2:49\",\"2:53\",\"2:57\",\"3:01\",\"3:05\",\"3:09\",\"3:13+\"]\n},\n\"_3000meterF\":{\n\t\"data\":[7, 15, 45, 57, 126, 164, 233, 221, 251, 279, 263, 227, 172, 133, 129, 92, 69, 43, 41,113],\n\t\"labels\":[\"9:23\",\"9:36\",\"9:49\",\"10:02\",\"10:15\",\"10:28\",\"10:41\",\"10:54\",\"11:07\",\"11:20\",\"11:33\",\"11:46\",\"11:59\",\"12:12\",\"12:25\",\"12:38\",\"12:51\",\"13:04\",\"13:17\",\"13:30+\"]\n}\n}";
+        JSONdata = JSON.parse(JSONdata);
+        //Where we want to write to
+        window.canvas1 = document.getElementById('barChart').getContext('2d')
+        console.log(JSONdata);
+        const l1 = JSONdata._60meterM.name;
+        const ls1 = JSONdata._60meterM.labels;
+        const d1 = JSONdata._60meterM.data; 
+        data  = {
+            labels:ls1,
+            datasets: [{
+                label:`${l1}`,
+                data:d1,
+                backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1
+            }]
+        };
+        config = {
+            type: 'bar',
+            data: data,
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        };
+        // Create the chart
+        myChart = new Chart(canvas1, config);
+
+        // Worst JS of my life below
+        function formHandler(){
+            var JSONdata = "{\n\"_60meterM\":{\n\t\"data\":[0, 0, 8, 424, 2249, 2647, 1762, 792, 357, 126, 59, 29, 4, 7, 2, 2],\n\t\"labels\":[\"6s\",\"6.25s\",\"6.5s\",\"6.75s\",\"7s\",\"7.25s\",\"7.5s\",\"7.75s\",\"8s\",\"8.25s\",\"8.5s\",\"8.75s\",\"9s\",\"9.25s\",\"9.5s\",\"9.75s\"],\n\t\"name\":\"Men's 60 Meter Dash\"\n},\n\"_200meterM\":{\n\t\"data\":[0, 1, 55, 241, 600, 935, 1207, 1202, 947, 649, 479, 325, 225, 142, 64, 42],\n\t\"labels\":[\"20.5s\",\"21s\",\"21.5s\",\"22s\",\"22.5s\",\"23s\",\"23.5s\",\"24s\",\"24.5s\",\"25s\",\"25.5s\",\"26s\",\"26.5\",\"27s\",\"27.5s\",\"28s\",\"28.5s\"],\n\t\"name\":\"Men's 200 Meter Dash\"\n},\n\"_400meterM\":{\n\t\"data\":[0, 0, 15, 41, 145, 277, 455, 565, 631, 539, 457, 331, 240, 168, 116, 90, 62, 148],\n\t\"labels\":[\"45s\",\"46s\",\"47s\",\"48s\",\"49s\",\"50s\",\"51s\",\"52s\",\"53s\",\"54s\",\"55s\",\"56s\",\"57s\",\"58s\",\"59s\",\"1:00\",\"1:01\",\"1:02+\"],\n    \"name\":\"Men's 400 Meter Dash\"\n},\n\"_800meterM\":{\n\t\"data\":[0, 4, 48, 215, 509, 666, 668, 478, 377, 323, 257, 168, 135, 99, 64, 0, 0],\n\t\"labels\":[\"1:45\",\"1:48\",\"1:51\",\"1:54\",\"1:57\",\"2:00\",\"2:03\",\"2:06\",\"2:09\",\"2:12\",\"2:15\",\"2:18\",\"2:21\",\"2:24\",\"2:27\",\"2:30+\"],\n    \"name\":\"Men's 800 Meter Run\"\n},\n\"_3000meterM\":{\n\t\"data\":[13, 48, 116, 294, 495, 481, 530, 425, 359, 324, 190, 155, 101, 74, 148],\n\t\"labels\":[\"8:00\",\"8:12\",\"8:24\",\"8:36\",\"8:48\",\"9:00\",\"9:12\",\"9:24\",\"9:36\",\"9:48\",\"10:00\",\"10:12\",\"10:24\",\"10:36\",\"10:48+\"],\n    \"name\":\"Men's 3000 Meter Run\"\n\n},\n\"_60meterF\":{\n\t\"data\":[1, 74, 590, 1170, 1379, 1119, 703, 429, 253, 128, 81, 149],\n\t\"labels\":[\"7.25s\",\"7.5s\",\"7.75s\",\"8s\",\"8.25s\",\"8.5s\",\"8.75s\",\"9s\",\"9.25s\",\"9.5s\",\"9.75s\",\"10+\"],\n    \"name\":\"Womens's 60 Meter Run\"\n},\n\"_200meterF\":{\n\t\"data\":[18, 183, 607, 1226, 1265, 1021, 626, 426, 201, 106, 56,124],\n\t\"labels\":[\"23\",\"24\",\"25\",\"26\",\"27\",\"28\",\"29\",\"30\",\"31\",\"32\",\"33\",\"34+\"],\n\t\"name\":\"Womens's 200 Meter Dash\"\n},\n\"_400meterF\":{\n\t\"data\":[5, 11, 40, 82, 126, 211, 269, 307, 339, 291, 267, 250, 174, 163, 153, 126, 81, 67, 51, 46,168],\n\t\"labels\":[\"55s\",\"56s\",\"57s\",\"58s\",\"59s\",\"1:00\",\"1:01\",\"1:02\",\"1:03\",\"1:04\",\"1:05\",\"1:06\",\"1:07\",\"1:08\",\"1:09\",\"1:10\",\"1:11\",\"1:12\",\"1:13\",\"1:14\",\"1:15+\"],\n\t\"name\":\"Womens's 400 Meter Dash\"\n},\n\"_800meterF\":{\n\t\"data\":[3, 5, 68, 161, 287, 396, 440, 460, 398, 348, 282, 219, 159, 111, 89, 66, 49,156],\n\t\"labels\":[\"2:05\",\"2:09\",\"2:13\",\"2:17\",\"2:21\",\"2:25\",\"2:29\",\"2:33\",\"2:37\",\"2:41\",\"2:45\",\"2:49\",\"2:53\",\"2:57\",\"3:01\",\"3:05\",\"3:09\",\"3:13+\"],\n\t\"name\":\"Womens's 800 Meter Dash\"\n},\n\"_3000meterF\":{\n\t\"data\":[7, 15, 45, 57, 126, 164, 233, 221, 251, 279, 263, 227, 172, 133, 129, 92, 69, 43, 41,113],\n\t\"labels\":[\"9:23\",\"9:36\",\"9:49\",\"10:02\",\"10:15\",\"10:28\",\"10:41\",\"10:54\",\"11:07\",\"11:20\",\"11:33\",\"11:46\",\"11:59\",\"12:12\",\"12:25\",\"12:38\",\"12:51\",\"13:04\",\"13:17\",\"13:30+\"],\n\t\"name\":\"Womens's 3000 Meter Dash\"\n}\n}";
+            JSONdata = JSON.parse(JSONdata);
+            let mf = document.getElementById('mf').value;
+            let distance = document.getElementById('distance').value;
+            let searchString = "_" + distance + mf;
+            canvas1 = document.getElementById('barChart').getContext('2d');
+            l2 = JSONdata[searchString].name;
+            ls2 = JSONdata[searchString].labels;
+            d2 = JSONdata[searchString].data;
+            data  = {
+            labels:ls2,
+            datasets: [{
+                label:`${l2}`,
+                data:d2,
+                backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1
+            }]
+        };
+        config = {
+            type: 'bar',
+            data: data,
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        };
+        myChart.destroy();
+        myChart = new Chart(canvas1, config);
+        }
+    </script>
+    <script>
+        //from https://www.w3schools.com/howto/howto_js_sticky_header.asp
+        // When the user scrolls the page, execute myFunction
+        window.onscroll = function() {myFunction()};
+
+        // Get the header
+        var header = document.getElementById("myHeader");
+
+        // Get the offset position of the navbar
+        var sticky = header.offsetTop;
+
+        // Add the sticky class to the header when you reach its scroll position. Remove "sticky" when you leave the scroll position
+        function myFunction() {
+          if (window.pageYOffset > sticky) {
+            header.classList.add("sticky");
+          } else {
+            header.classList.remove("sticky");
+          }
+        } 
+    </script>
+    <h2>
+        Your times
+    </h2>
+    <p style="font-style: italic;">
+        Input a time below to learn about how fast you are compared to all of D3.
+    </p>
+    <div id="Forms">
+        <p>
+            <select name="mf2" id="mf2" onchange="">
+                <option value=" Womens ">Female</option>
+                <option value=" Mens ">Male</option>
+            </select>
+            <select name="Event" id="ev2">
+                <option value=" 60 ">60m</option>
+                <option value=" 200 ">200m</option>
+                <option value=" 400 ">400m</option>
+                <option value=" 800 ">800m</option>
+                <option value=" 3000 ">3000m</option>
+            </select>
+            Time (seconds)
+            <input type="text" id="time" name="time" value="9.52">
+            <input type="button" value="submit" onclick="timeHandler()">
+            <br>
+            <select name="M/P" id="morp">
+                <option value="0">Mongo</option>
+                <option value="1">Postgres</option>
+            </select>
+        </p>
+    </div>
+    <script>
+        async function timeHandler() {
+            const sex = document.getElementById('mf2').value;
+            const event = document.getElementById('ev2').value;
+            const time = document.getElementById('time').value;
+            if(';' in new Set(Array.from(time))) {
+                return;
+            }
+            const morp = document.getElementById('morp').value;
+            fetch('http://loin.cs.brynmawr.edu:23456/times',{
+                method:'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body:JSON.stringify({
+                    sex:sex,
+                    event:event,
+                    time:time,
+                    morp:morp
+                })
+            })
+            .then(response => response.text())
+            .then(data => {
+                let changeHere = document.getElementById('changeHere');
+                let parsed = JSON.parse(data);
+                let x1 = parsed.response;
+                x1 *= 100;
+                x1 = String(x1).slice(0,5) + `%`;
+                changeHere.innerHTML = x1
+            })
+        }
+        timeHandler();
+    </script>
+    <p>
+        You are faster than
+    </p>
+    <p id="changeHere" style="font-weight: bolder;font-size: large">
+        0.00%
+    </p>
+    <p>
+        Of all runners in D3.
+    </p>
+    <h2>
+        About
+    </h2>
+    <p>
+       To search for individual athletes, or find teams, click the search button in the header. <a href="http://loin.cs.brynmawr.edu:23456/Presentation.html">Presentation</a> The data for this page is from Dec-Feb of the 2023-2024 indoor track season. It only includes D3 athletes for the teams and times pages.
+    </p>
+</div>
+</body>
